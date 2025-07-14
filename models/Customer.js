@@ -1,15 +1,29 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-// Bộ sưu tập Khách hàng (Customer)
-const CustomerSchema = new Schema({
-  _id: { type: Schema.Types.ObjectId, auto: true }, // Khóa chính, tự động tạo
-  fullName: { type: String, required: true }, // Tên đầy đủ của khách hàng
-  email: { type: String, required: true, unique: true }, // Email, duy nhất
-  phone: { type: String, required: true, unique: true }, // Số điện thoại, duy nhất
-  address: { type: String }, // Địa chỉ khách hàng
-  createdAt: { type: Date, default: Date.now }, // Thời gian tạo bản ghi
-  updatedAt: { type: Date, default: Date.now }, // Thời gian cập nhật bản ghi
+const customerSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  email: { type: String, required: true, unique: true }, // Email phải là duy nhất
+  phone: { type: String, required: true }, // Phone không cần unique
+  address: { type: String },
+  password: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("Customer", CustomerSchema);
+// xem lại, thực hiện mã hoá trước khi lưu
+customerSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// xem lại, thực hiện so sánh mật khẩu
+customerSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+module.exports = mongoose.model('Customer', customerSchema);
