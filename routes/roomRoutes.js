@@ -12,7 +12,7 @@ const protect = require('../middleware/authMiddleware');
 const authorize = require('../middleware/permissionMiddleware');
 const router = express.Router();
 
-// Cấu hình Multer để lưu trữ hình ảnh
+// sử dụng Multer để lưu trữ hình ảnh
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/'); // Lưu hình ảnh vào thư mục 'uploads'

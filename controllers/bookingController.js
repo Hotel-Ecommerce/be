@@ -157,7 +157,7 @@ exports.updateBooking = asyncHandler(async (req, res) => {
     if (checkInDate || checkOutDate) {
         if (isNaN(newCheckInDate.getTime()) || isNaN(newCheckOutDate.getTime()) || newCheckInDate >= newCheckOutDate) {
             res.status(400);
-            throw new Error('Khoảng ngày không hợp lệ…');
+            throw new Error('Khoảng ngày tháng không hợp lệ');
         }
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -191,9 +191,8 @@ exports.updateBooking = asyncHandler(async (req, res) => {
     res.json(updatedBooking);
 });
 
-// @desc    Xóa booking
-// @route   POST /api/bookings/delete
-// @access  Private/Manager
+// Xóa booking
+
 exports.deleteBooking = asyncHandler(async (req, res) => {
     const { id } = req.body;
 

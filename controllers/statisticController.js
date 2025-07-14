@@ -13,7 +13,7 @@ exports.getBookingStatistics = asyncHandler(async (req, res) => {
 
     const start = new Date(startDate);
     const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999); // Đảm bảo ngày kết thúc bao gồm toàn bộ ngày đó
+    end.setHours(23, 59, 59, 999);
 
     if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) {
         res.status(400);

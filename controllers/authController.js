@@ -74,7 +74,7 @@ exports.login = asyncHandler(async (req, res) => {
             fullName: user.fullName,
             email: user.email,
             phone: user.phone,
-            address: user.address || user.role, // Với nhân viên, địa chỉ có thể không tồn tại, dùng vai trò thay thế
+            address: user.address,
             role: role,
             token: generateToken(user._id, role)
         });
@@ -84,9 +84,8 @@ exports.login = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Đăng xuất người dùng (xóa token phía client)
-// @route   POST /auth/signout
-// @access  Public
+// Đăng xuất người dùng (xóa token phía client)
+
 exports.signout = (req, res) => {
     res.status(200).json({ message: 'Đăng xuất thành công' });
 };
