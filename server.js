@@ -28,7 +28,7 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const statisticRoutes = require('./routes/statisticRoutes');
 
-// Gắn các route
+// Gắn các rout
 app.use('/auth', authRoutes);
 app.use('/customers', customerRoutes);
 app.use('/rooms', roomRoutes);

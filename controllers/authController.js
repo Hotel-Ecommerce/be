@@ -9,9 +9,8 @@ const generateToken = (id, role) => {
     return jwt.sign({ id, role }, jwtSecret, { expiresIn: jwtExpiresIn });
 };
 
-// @desc    Đăng ký khách hàng mới
-// @route   POST /api/auth/signup
-// @access  Public
+//  Đăng ký khách hàng mới
+
 exports.signupCustomer = asyncHandler(async (req, res) => {
     const { password, fullName, address, email, phone } = req.body;
 
@@ -19,7 +18,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
     const customerExists = await Customer.findOne({ email });
     if (customerExists) {
         res.status(400);
-        throw new Error('Email đã tồn tại...');
+        throw new Error('Email đã tồn tại.');
     }
 
     const customer = await Customer.create({
@@ -27,7 +26,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
         email,
         phone,
         address,
-        password // Mật khẩu sẽ được mã hóa bởi hook pre-save trong model
+        password // Mật khẩu sẽ được mã hóa
     });
 
     if (customer) {
@@ -46,17 +45,15 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Xác thực người dùng (khách hàng & nhân viên) & lấy token
-// @route   POST /api/auth/login
-// @access  Public
+
 exports.login = asyncHandler(async (req, res) => {
-    const { username, password } = req.body; // username có thể là email
+    const { email, password } = req.body; // đổi thành email
 
     let user = null;
     let role = null;
 
     // Cố gắng tìm trong collection Customer
-    const customer = await Customer.findOne({ email: username });
+    const customer = await Customer.findOne({ email: email });
     if (customer && (await customer.matchPassword(password))) {
         user = customer;
         role = 'Customer';
@@ -64,7 +61,7 @@ exports.login = asyncHandler(async (req, res) => {
 
     // Nếu không tìm thấy trong Customer, cố gắng tìm trong Employee
     if (!user) {
-        const employee = await Employee.findOne({ email: username });
+        const employee = await Employee.findOne({ email: email });
         if (employee && (await employee.matchPassword(password))) {
             user = employee;
             role = employee.role; // Manager hoặc Admin
@@ -88,8 +85,8 @@ exports.login = asyncHandler(async (req, res) => {
 });
 
 // @desc    Đăng xuất người dùng (xóa token phía client)
-// @route   POST /api/auth/signout
+// @route   POST /auth/signout
 // @access  Public
 exports.signout = (req, res) => {
-    res.status(200).json({ message: 'Đăng xuất thành công (token nên được xóa phía client)' });
+    res.status(200).json({ message: 'Đăng xuất thành công' });
 };
