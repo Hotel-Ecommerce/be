@@ -34,7 +34,7 @@ app.use('/customers', customerRoutes);
 app.use('/rooms', roomRoutes);
 app.use('/bookings', bookingRoutes);
 app.use('/employees', employeeRoutes);
-app.use('/statistics', statisticRoutes);
+app.use('/statistic', statisticRoutes);
 
 // Middleware xử lý lỗi cơ bản (cho các lỗi chưa được xử lý)
 app.use((err, req, res, next) => {
