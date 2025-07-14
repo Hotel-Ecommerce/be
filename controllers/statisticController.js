@@ -1,9 +1,8 @@
 const Booking = require('../models/Booking');
 const asyncHandler = require('../utils/errorHandler');
 
-// @desc    Lấy thống kê đặt phòng
-// @route   GET /api/statistics/bookings
-// @access  Private/Manager
+// Lấy thống kê đặt phòng
+
 exports.getBookingStatistics = asyncHandler(async (req, res) => {
     const { startDate, endDate, groupBy = 'day' } = req.query;
 
@@ -60,7 +59,10 @@ exports.getBookingStatistics = asyncHandler(async (req, res) => {
                     $sum: {
                         $cond: [{ $eq: ['$status', 'Confirmed'] }, 1, 0]
                     }
-                }
+                },
+
+                totalRevenue: { $sum: '$totalPrice' }
+
             }
         },
         {
@@ -79,7 +81,8 @@ exports.getBookingStatistics = asyncHandler(async (req, res) => {
                     }
                 },
                 totalBookings: 1,
-                confirmedBookings: 1
+                confirmedBookings: 1,
+                totalRevenue: 1 // 
             }
         },
         {

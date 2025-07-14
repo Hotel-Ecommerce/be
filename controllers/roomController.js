@@ -5,7 +5,7 @@ const APIFeatures = require('../utils/apiFeatures');
 const path = require('path');
 const fs = require('fs');
 
-// Helper để lấy thời gian đã được đặt cho một phòng
+// lấy thời gian đã được đặt cho một phòng
 const getRoomBookedTimes = async (roomId) => {
     const bookings = await Booking.find({
         roomId: roomId,
@@ -18,12 +18,11 @@ const getRoomBookedTimes = async (roomId) => {
     }));
 };
 
-// @desc    Lấy tất cả phòng
-// @route   GET /api/rooms/list
-// @access  Public
+// Lấy tất cả phòng
+
 exports.getRooms = asyncHandler(async (req, res) => {
     const features = new APIFeatures(Room.find(), req.query)
-        .filter() // Xử lý các bộ lọc như type, capacity_gte
+        .filter() // Xử lý các bộ lọc như type, capacity
         .search(['roomNumber', 'description', 'type']) // Tìm kiếm theo q
         .sort() // Sắp xếp
         .paginate(); // Phân trang
@@ -42,9 +41,8 @@ exports.getRooms = asyncHandler(async (req, res) => {
     res.json(roomsWithBookedTime);
 });
 
-// @desc    Thêm phòng mới
-// @route   POST /api/rooms/add
-// @access  Private/Manager, Admin
+// Thêm phòng mới
+
 exports.addRoom = asyncHandler(async (req, res) => {
     const { roomNumber, type, price, description, capacity } = req.body;
     // req.files chứa thông tin về các file được upload bởi Multer
@@ -61,7 +59,7 @@ exports.addRoom = asyncHandler(async (req, res) => {
             }
         });
         res.status(400);
-        throw new Error('Loại phòng không hợp lệ...');
+        throw new Error('Loại phòng không hợp lệ');
     }
 
     // Kiểm tra số phòng đã tồn tại chưa
@@ -90,9 +88,8 @@ exports.addRoom = asyncHandler(async (req, res) => {
     res.status(201).json(room);
 });
 
-// @desc    Lấy thông tin phòng bằng ID
-// @route   GET /api/rooms/:id
-// @access  Public
+// Lấy thông tin phòng bằng ID
+
 exports.getRoomById = asyncHandler(async (req, res) => {
     const room = await Room.findById(req.params.id);
 
@@ -101,7 +98,7 @@ exports.getRoomById = asyncHandler(async (req, res) => {
         throw new Error('Không tìm thấy phòng...');
     }
 
-    // Nâng cao dữ liệu phòng với thời gian đã được đặt (bookedTime)
+    // thêm dữ liệu phòng với thời gian đã được đặt (bookedTime)
     const bookedTime = await getRoomBookedTimes(room._id);
     const roomWithBookedTime = {
         ...room._doc,
@@ -111,9 +108,8 @@ exports.getRoomById = asyncHandler(async (req, res) => {
     res.json(roomWithBookedTime);
 });
 
-// @desc    Cập nhật thông tin phòng
-// @route   POST /api/rooms/update
-// @access  Private/Manager, Admin
+// Cập nhật thông tin phòng
+
 exports.updateRoom = asyncHandler(async (req, res) => {
     const { id, roomNumber, type, price, description, capacity, removedImageUrls } = req.body;
     const newImages = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
@@ -176,9 +172,8 @@ exports.updateRoom = asyncHandler(async (req, res) => {
     res.json(updatedRoom);
 });
 
-// @desc    Xóa phòng
-// @route   POST /api/rooms/delete
-// @access  Private/Manager, Admin
+// Xóa phòng
+
 exports.deleteRoom = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
@@ -186,7 +181,7 @@ exports.deleteRoom = asyncHandler(async (req, res) => {
 
     if (!room) {
         res.status(404);
-        throw new Error('Không tìm thấy phòng...');
+        throw new Error('Không tìm thấy phòng');
     }
 
     // Xóa các hình ảnh liên quan khỏi server

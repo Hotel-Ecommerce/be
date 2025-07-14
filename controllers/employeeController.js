@@ -2,9 +2,8 @@ const Employee = require('../models/Employee');
 const asyncHandler = require('../utils/errorHandler');
 const APIFeatures = require('../utils/apiFeatures');
 
-// @desc    Lấy tất cả nhân viên
-// @route   GET /api/employees/list
-// @access  Private/Manager
+// Lấy tất cả nhân viên
+
 exports.getEmployees = asyncHandler(async (req, res) => {
     const features = new APIFeatures(Employee.find(), req.query)
         .search(['fullName', 'email', 'phone'])
@@ -12,13 +11,12 @@ exports.getEmployees = asyncHandler(async (req, res) => {
         .sort()
         .paginate();
 
-    const employees = await features.query.select('-password'); // Không gửi mật khẩu hash
+    const employees = await features.query.select('-password'); // Không gửi mật khẩu đã hash
     res.json(employees);
 });
 
-// @desc    Thêm nhân viên mới
-// @route   POST /api/employees/add
-// @access  Private/Manager
+// Thêm nhân viên mới
+
 exports.addEmployee = asyncHandler(async (req, res) => {
     const { fullName, role, email, phone, password } = req.body;
 
@@ -33,7 +31,7 @@ exports.addEmployee = asyncHandler(async (req, res) => {
     const validRoles = ['Manager', 'Admin'];
     if (!validRoles.includes(role)) {
         res.status(400);
-        throw new Error('Vai trò nhân viên không hợp lệ...');
+        throw new Error('Vai trò không hợp lệ');
     }
 
     const employee = await Employee.create({
@@ -41,7 +39,7 @@ exports.addEmployee = asyncHandler(async (req, res) => {
         role,
         email,
         phone,
-        password // Mật khẩu sẽ được mã hóa bởi hook pre-save trong model
+        password // mã hóa
     });
 
     if (employee) {
@@ -58,9 +56,8 @@ exports.addEmployee = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Lấy thông tin nhân viên bằng ID
-// @route   GET /api/employees/:id
-// @access  Private/Manager
+// Lấy thông tin nhân viên bằng ID
+
 exports.getEmployeeById = asyncHandler(async (req, res) => {
     const employee = await Employee.findById(req.params.id).select('-password');
 
@@ -71,9 +68,8 @@ exports.getEmployeeById = asyncHandler(async (req, res) => {
     res.json(employee);
 });
 
-// @desc    Cập nhật thông tin nhân viên
-// @route   POST /api/employees/update
-// @access  Private/Manager
+// Cập nhật thông tin nhân viên
+
 exports.updateEmployee = asyncHandler(async (req, res) => {
     const { id, fullName, role, email, phone } = req.body;
 
@@ -112,9 +108,8 @@ exports.updateEmployee = asyncHandler(async (req, res) => {
     res.json(updatedEmployee.toObject({ getters: true, virtuals: false })); // Trả về đối tượng thuần, ẩn mật khẩu
 });
 
-// @desc    Xóa nhân viên
-// @route   POST /api/employees/delete
-// @access  Private/Manager
+// Xóa nhân viên
+
 exports.deleteEmployee = asyncHandler(async (req, res) => {
     const { id } = req.body;
 

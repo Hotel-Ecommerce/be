@@ -4,7 +4,7 @@ const Room = require('../models/Room');
 const asyncHandler = require('../utils/errorHandler');
 const APIFeatures = require('../utils/apiFeatures');
 
-// Helper để kiểm tra tính khả dụng của phòng
+// để kiểm tra còn phòng hay không còn.
 const checkRoomAvailability = async (roomId, checkInDate, checkOutDate, currentBookingId = null) => {
     const query = {
         roomId: roomId,
@@ -23,13 +23,12 @@ const checkRoomAvailability = async (roomId, checkInDate, checkOutDate, currentB
     return conflictingBookings.length === 0;
 };
 
-// @desc    Lấy tất cả các booking
-// @route   GET /api/bookings/list
-// @access  Private/Manager, Admin, Customer
+//Lấy tất cả các booking
+
 exports.getBookings = asyncHandler(async (req, res) => {
     let query = Booking.find();
 
-    // Khách hàng chỉ có thể xem các booking của chính họ
+    // Cus chỉ có thể xem các booking của chính họ
     if (req.user.role === 'Customer') {
         query = query.where('customerId').equals(req.user._id);
     } else {
@@ -51,9 +50,8 @@ exports.getBookings = asyncHandler(async (req, res) => {
     res.json(bookings);
 });
 
-// @desc    Thêm booking mới
-// @route   POST /api/bookings/add
-// @access  Private/Manager, Admin, Customer
+// Thêm booking mới
+
 exports.addBooking = asyncHandler(async (req, res) => {
     const { customerId, roomId, checkInDate, checkOutDate } = req.body;
 
@@ -76,7 +74,7 @@ exports.addBooking = asyncHandler(async (req, res) => {
     // Khách hàng chỉ có thể đặt phòng cho chính họ
     if (req.user.role === 'Customer' && req.user._id.toString() !== customerId) {
         res.status(403);
-        throw new Error('Forbidden: Khách hàng chỉ có thể đặt phòng cho chính mình.');
+        throw new Error('Khách hàng chỉ có thể đặt phòng cho chính mình.');
     }
 
     // Kiểm tra sự tồn tại của khách hàng
@@ -97,7 +95,7 @@ exports.addBooking = asyncHandler(async (req, res) => {
     const isAvailable = await checkRoomAvailability(roomId, inDate, outDate);
     if (!isAvailable) {
         res.status(400);
-        throw new Error('Phòng không có sẵn trong khoảng thời gian này...');
+        throw new Error('Phòng không có sẵn trong khoảng thời gian này, xin vui lòng chọn khoảng thời gian khác hoặc phòng khác');
     }
 
     // Tính tổng giá
@@ -140,9 +138,8 @@ exports.getBookingById = asyncHandler(async (req, res) => {
     res.json(booking);
 });
 
-// @desc    Cập nhật thông tin booking
-// @route   POST /api/bookings/update
-// @access  Private/Manager, Admin
+// Cập nhật thông tin booking
+
 exports.updateBooking = asyncHandler(async (req, res) => {
     const { id, customerId, roomId, checkInDate, checkOutDate, totalPrice, status, paymentStatus } = req.body;
 

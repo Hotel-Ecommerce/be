@@ -20,30 +20,30 @@ const protect = asyncHandler(async (req, res, next) => {
                 req.user = await Customer.findById(decoded.id).select('-password');
                 if (!req.user) {
                     res.status(401);
-                    throw new Error('Không được ủy quyền, không tìm thấy khách hàng');
+                    throw new Error('Không tìm thấy khách hàng');
                 }
             } else if (decoded.role === 'Manager' || decoded.role === 'Admin') {
                 req.user = await Employee.findById(decoded.id).select('-password');
                 if (!req.user) {
                     res.status(401);
-                    throw new Error('Không được ủy quyền, không tìm thấy nhân viên');
+                    throw new Error('Không tìm thấy nhân viên');
                 }
             } else {
                 res.status(401);
-                throw new Error('Không được ủy quyền, vai trò không xác định');
+                throw new Error('Vai trò không xác định');
             }
             req.user.role = decoded.role; // Gắn vai trò vào req.user
             next();
         } catch (error) {
             console.error(error);
             res.status(401);
-            throw new Error('Không được ủy quyền, token không hợp lệ');
+            throw new Error('Xác thực token không hợp lệ');
         }
     }
 
     if (!token) {
         res.status(401);
-        throw new Error('Không được ủy quyền, không có token');
+        throw new Error('Không có token');
     }
 });
 
