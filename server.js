@@ -29,12 +29,12 @@ const employeeRoutes = require('./routes/employeeRoutes');
 const statisticRoutes = require('./routes/statisticRoutes');
 
 // Gắn các route
-app.use('/api/auth', authRoutes);
-app.use('/api/customers', customerRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/statistics', statisticRoutes);
+app.use('/auth', authRoutes);
+app.use('/customers', customerRoutes);
+app.use('/rooms', roomRoutes);
+app.use('/bookings', bookingRoutes);
+app.use('/employees', employeeRoutes);
+app.use('/statistics', statisticRoutes);
 
 // Middleware xử lý lỗi cơ bản (cho các lỗi chưa được xử lý)
 app.use((err, req, res, next) => {
@@ -45,6 +45,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8989;
 
 app.listen(PORT, () => console.log(`Server đang chạy trên cổng ${PORT}`));
