@@ -27,7 +27,7 @@ exports.getCustomerById = asyncHandler(async (req, res) => {
     // Khách hàng chỉ có thể xem hồ sơ của chính họ
     if (req.user.role === 'Customer' && req.user._id.toString() !== customer._id.toString()) {
         res.status(403);
-        throw new Error('Forbidden: Bạn chỉ có thể xem thông tin khách hàng của chính mình.');
+        throw new Error('FBạn chỉ có thể xem thông tin của chính mình.');
     }
 
     res.json(customer);
