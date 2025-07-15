@@ -91,3 +91,38 @@ exports.deleteCustomer = asyncHandler(async (req, res) => {
     await customer.deleteOne();
     res.json({ status: 'success', message: 'Customer deleted successfully' });
 });
+
+// @desc    Cập nhật mật khẩu khách hàng
+// @route   POST /api/customers/update-password
+// @access  Private/Customer
+exports.updateCustomerPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới có khớp không
+    if (newPassword !== confirmNewPassword) {
+        res.status(400);
+        throw new Error('Mật khẩu mới và xác nhận mật khẩu không khớp...');
+    }
+
+    // Lấy thông tin khách hàng từ token
+    const customer = await Customer.findById(req.user._id);
+
+    if (!customer) {
+        res.status(404);
+        throw new Error('Không tìm thấy khách hàng...');
+    }
+    
+    // Kiểm tra mật khẩu hiện tại có đúng không
+    const isMatch = await customer.matchPassword(oldPassword);
+    if (!isMatch) {
+        res.status(401);
+        throw new Error('Mật khẩu hiện tại không đúng...');
+    }
+
+    // Cập nhật mật khẩu mới và lưu
+    customer.password = newPassword;
+    await customer.save();
+
+
+    res.json({ status: 'success', message: 'Mật khẩu đã được cập nhật thành công' });
+});

@@ -3,7 +3,8 @@ const {
     getCustomers,
     getCustomerById,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    updateCustomerPassword,
 } = require('../controllers/customerController');
 const protect = require('../middleware/authMiddleware');
 const authorize = require('../middleware/permissionMiddleware');
@@ -13,5 +14,6 @@ router.get('/list', protect, authorize(['Manager', 'Admin']), getCustomers);
 router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getCustomerById);
 router.post('/update', protect, authorize(['Manager', 'Admin', 'Customer']), updateCustomer);
 router.post('/delete', protect, authorize(['Manager', 'Admin']), deleteCustomer);
+router.post('/update-password', protect, updateCustomerPassword);
 
 module.exports = router;
