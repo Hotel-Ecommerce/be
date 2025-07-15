@@ -3,12 +3,12 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const path = require('path');
+const Employee = require('./models/Employee');
 
 // Tải biến môi trường
 dotenv.config();
 
-// Kết nối đến cơ sở dữ liệu
-connectDB();
+
 
 const app = express();
 
@@ -36,15 +36,53 @@ app.use('/bookings', bookingRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/statistics', statisticRoutes);
 
-// Middleware xử lý lỗi cơ bản (cho các lỗi chưa được xử lý)
-app.use((err, req, res, next) => {
-    console.error(err.stack); // Log lỗi stack để debug
-    res.status(err.statusCode || 500).json({
-        message: err.message || 'Something went wrong!',
-        stack: process.env.NODE_ENV === 'production' ? null : err.stack // Chỉ hiển thị stack trong dev
+
+// tạo user mặc định khi khởi chạy user
+const createDefaultUsers = async () => {
+    try {
+        // Kiểm tra và tạo Manager
+        let manager = await Employee.findOne({ email: 'manager@manager.com' });
+        if (!manager) {
+            manager = await Employee.create({
+                fullName: 'Manager',
+                email: 'manager@manager.com',
+                phone: '0908518566',
+                password: 'manager',
+                role: 'Manager'
+            });
+            console.log('Default Manager da tao:', manager.email);
+        } else {
+            console.log('Da ton tai:', manager.email);
+        }
+
+        // Kiểm tra và tạo Admin
+        let admin = await Employee.findOne({ email: 'admin@admin.com' });
+        if (!admin) {
+            admin = await Employee.create({
+                fullName: 'Admin',
+                email: 'admin@admin.com',
+                phone: '0908518566',
+                password: 'admin',
+                role: 'Admin'
+            });
+            console.log('Default Admin đa tao:', admin.email);
+        } else {
+            console.log('Default Admin da ton tai:', admin.email);
+        }
+    } catch (error) {
+        console.error('Loi khi tao default user:', error.message);
+    }
+};
+
+
+const PORT = process.env.PORT || 8988;
+
+connectDB().then(() => {
+    app.listen(PORT, async () => {
+        console.log(`Server đang chạy trên cổng ${PORT}`);
+        await createDefaultUsers();
     });
+}).catch(err => {
+    console.error('Không thể kết nối Database và khởi động server:', err.message);
+    process.exit(1);
 });
-
-const PORT = process.env.PORT || 8989;
-
-app.listen(PORT, () => console.log(`Server đang chạy trên cổng ${PORT}`));
