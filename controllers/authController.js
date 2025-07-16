@@ -1,9 +1,3 @@
-// const jwt = require('jsonwebtoken');
-// const Customer = require('../models/Customer');
-// const Employee = require('../models/Employee');
-// const asyncHandler = require('../utils/errorHandler');
-// const { jwtSecret, jwtExpiresIn } = require('../config/jwt');
-
 import jwt from 'jsonwebtoken';
 import Customer from '../models/Customer.js';
 import Employee from '../models/Employee.js';
