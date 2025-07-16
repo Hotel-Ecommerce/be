@@ -1,9 +1,3 @@
-// const Room = require('../models/Room');
-// const Booking = require('../models/Booking');
-// const asyncHandler = require('../utils/errorHandler');
-// const APIFeatures = require('../utils/apiFeatures');
-// const path = require('path');
-// const fs = require('fs'); //để thao tác với hệ thống file
 import Room from '../models/Room.js';
 import Booking from '../models/Booking.js';
 import asyncHandler from '../utils/errorHandler.js';

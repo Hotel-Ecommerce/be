@@ -1,8 +1,3 @@
-// const Booking = require('../models/Booking');
-// const Customer = require('../models/Customer');
-// const Room = require('../models/Room');
-// const asyncHandler = require('../utils/errorHandler');
-// const APIFeatures = require('../utils/apiFeatures');
 import Booking from '../models/Booking.js';
 import Customer from '../models/Customer.js';
 import Room from '../models/Room.js';

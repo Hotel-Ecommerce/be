@@ -1,6 +1,3 @@
-// const Employee = require('../models/Employee');
-// const asyncHandler = require('../utils/errorHandler');
-// const APIFeatures = require('../utils/apiFeatures');
 import Employee from '../models/Employee.js';
 import asyncHandler from '../utils/errorHandler.js';
 import APIFeatures from '../utils/apiFeatures.js';

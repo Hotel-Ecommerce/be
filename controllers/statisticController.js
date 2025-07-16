@@ -1,5 +1,3 @@
-// const Booking = require('../models/Booking');
-// const asyncHandler = require('../utils/errorHandler');
 import Booking from '../models/Booking.js';
 import asyncHandler from '../utils/errorHandler.js';
 // Lấy thống kê đặt phòng

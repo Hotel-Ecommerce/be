@@ -1,9 +1,3 @@
-// const express = require('express');
-// const dotenv = require('dotenv');
-// const connectDB = require('./config/db');
-// const cors = require('cors');
-// const path = require('path');
-// const Employee = require('./models/Employee');
 
 import express from "express";
 import dotenv from 'dotenv';

@@ -1,4 +1,3 @@
-// const mongoose = require('mongoose');
 import mongoose from "mongoose";
 const roomSchema = new mongoose.Schema({
   roomNumber: { type: String, required: true, unique: true },
