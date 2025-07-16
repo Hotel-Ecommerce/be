@@ -1,9 +1,13 @@
-const Booking = require('../models/Booking');
-const Customer = require('../models/Customer');
-const Room = require('../models/Room');
-const asyncHandler = require('../utils/errorHandler');
-const APIFeatures = require('../utils/apiFeatures');
-
+// const Booking = require('../models/Booking');
+// const Customer = require('../models/Customer');
+// const Room = require('../models/Room');
+// const asyncHandler = require('../utils/errorHandler');
+// const APIFeatures = require('../utils/apiFeatures');
+import Booking from '../models/Booking.js';
+import Customer from '../models/Customer.js';
+import Room from '../models/Room.js';
+import asyncHandler from '../utils/errorHandler.js';
+import APIFeatures from '../utils/apiFeatures.js';
 // để kiểm tra còn phòng hay không còn.
 const checkRoomAvailability = async (roomId, checkInDate, checkOutDate, currentBookingId = null) => {
     const query = {

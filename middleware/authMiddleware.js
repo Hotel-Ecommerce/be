@@ -1,9 +1,13 @@
-const jwt = require('jsonwebtoken');
-const asyncHandler = require('../utils/errorHandler');
-const Customer = require('../models/Customer');
-const Employee = require('../models/Employee');
-const { jwtSecret } = require('../config/jwt');
-
+// const jwt = require('jsonwebtoken');
+// const asyncHandler = require('../utils/errorHandler');
+// const Customer = require('../models/Customer');
+// const Employee = require('../models/Employee');
+// const { jwtSecret } = require('../config/jwt');
+import jwt from 'jsonwebtoken';
+import asyncHandler from '../utils/errorHandler.js';
+import Customer from '../models/Customer.js';
+import Employee from '../models/Employee.js';
+import { jwtSecret } from '../config/jwt.js';
 const protect = asyncHandler(async (req, res, next) => {
     let token;
 
@@ -47,4 +51,5 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 });
 
-module.exports = protect;
+
+export default protect;

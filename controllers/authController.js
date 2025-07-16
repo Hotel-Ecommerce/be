@@ -1,8 +1,14 @@
-const jwt = require('jsonwebtoken');
-const Customer = require('../models/Customer');
-const Employee = require('../models/Employee');
-const asyncHandler = require('../utils/errorHandler');
-const { jwtSecret, jwtExpiresIn } = require('../config/jwt');
+// const jwt = require('jsonwebtoken');
+// const Customer = require('../models/Customer');
+// const Employee = require('../models/Employee');
+// const asyncHandler = require('../utils/errorHandler');
+// const { jwtSecret, jwtExpiresIn } = require('../config/jwt');
+
+import jwt from 'jsonwebtoken';
+import Customer from '../models/Customer.js';
+import Employee from '../models/Employee.js';
+import asyncHandler from '../utils/errorHandler.js';
+import { jwtSecret, jwtExpiresIn } from '../config/jwt.js';
 
 // Hàm tạo JWT
 const generateToken = (id, role) => {
@@ -26,7 +32,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
         email,
         phone,
         address,
-        password // Mật khẩu sẽ được mã hóa
+        password // Mật khẩu sẽ được mã hóa qua models
     });
 
     if (customer) {
@@ -36,7 +42,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
             email: customer.email,
             phone: customer.phone,
             address: customer.address,
-            role: 'Customer', // Đặt vai trò rõ ràng
+            role: 'Customer', // Đặt vai trò Customer
             token: generateToken(customer._id, 'Customer')
         });
     } else {
@@ -116,7 +122,7 @@ exports.changePassword = asyncHandler(async (req, res) => {
     }
 
     // 2. Cập nhật mật khẩu mới
-    // Mongoose pre-save hook sẽ tự động hash newPassword trước khi lưu
+    // sử dụng hash password qua pre của mongoDB
     user.password = newPassword;
     await user.save();
 

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-
+// const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const roomSchema = new mongoose.Schema({
   roomNumber: { type: String, required: true, unique: true },
   type: { type: String, required: true, enum: ['Standard', 'Deluxe', 'Suite'] },
@@ -11,4 +11,5 @@ const roomSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Room', roomSchema);
+
+export default mongoose.model('Room', roomSchema);

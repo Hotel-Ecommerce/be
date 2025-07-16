@@ -16,4 +16,5 @@ router.get('/:id', protect, authorize(['Manager']), getEmployeeById);
 router.post('/update', protect, authorize(['Manager']), updateEmployee);
 router.post('/delete', protect, authorize(['Manager']), deleteEmployee);
 
-module.exports = router;
+
+export default router;

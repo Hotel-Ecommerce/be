@@ -1,6 +1,10 @@
-const Customer = require('../models/Customer');
-const asyncHandler = require('../utils/errorHandler');
-const APIFeatures = require('../utils/apiFeatures');
+// const Customer = require('../models/Customer');
+// const asyncHandler = require('../utils/errorHandler');
+// const APIFeatures = require('../utils/apiFeatures');
+
+import Customer from '../models/Customer.js';
+import asyncHandler from '../utils/errorHandler.js';
+import APIFeatures from '../utils/apiFeatures.js';
 
 // Lấy tất cả khách hàng
 
@@ -21,7 +25,7 @@ exports.getCustomerById = asyncHandler(async (req, res) => {
 
     if (!customer) {
         res.status(404);
-        throw new Error('Không tìm thấy khách hàng...');
+        throw new Error('Không tìm thấy khách hàng');
     }
 
     // Khách hàng chỉ có thể xem hồ sơ của chính họ

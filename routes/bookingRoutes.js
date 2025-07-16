@@ -16,4 +16,5 @@ router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getBook
 router.post('/update', protect, authorize(['Manager', 'Admin']), updateBooking);
 router.post('/delete', protect, authorize(['Manager']), deleteBooking); // Chỉ Manager có thể xóa booking
 
-module.exports = router;
+
+export default router;

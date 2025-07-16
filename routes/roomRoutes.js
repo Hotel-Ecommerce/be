@@ -1,6 +1,9 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
+// const express = require('express');
+// const multer = require('multer');
+// const path = require('path');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
 const {
     getRooms,
     addRoom,
@@ -31,4 +34,5 @@ router.get('/:id', getRoomById); // Công khai, không cần xác thực
 router.post('/update', protect, authorize(['Manager', 'Admin']), upload.array('images', 5), updateRoom);
 router.post('/delete', protect, authorize(['Manager', 'Admin']), deleteRoom);
 
-module.exports = router;
+
+export default router;

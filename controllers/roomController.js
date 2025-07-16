@@ -1,16 +1,21 @@
-const Room = require('../models/Room');
-const Booking = require('../models/Booking');
-const asyncHandler = require('../utils/errorHandler');
-const APIFeatures = require('../utils/apiFeatures');
-const path = require('path');
-const fs = require('fs');
-
+// const Room = require('../models/Room');
+// const Booking = require('../models/Booking');
+// const asyncHandler = require('../utils/errorHandler');
+// const APIFeatures = require('../utils/apiFeatures');
+// const path = require('path');
+// const fs = require('fs'); //để thao tác với hệ thống file
+import Room from '../models/Room.js';
+import Booking from '../models/Booking.js';
+import asyncHandler from '../utils/errorHandler.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import path from 'path';
+import fs from 'fs';
 // lấy thời gian đã được đặt cho một phòng
 const getRoomBookedTimes = async (roomId) => {
     const bookings = await Booking.find({
         roomId: roomId,
         status: 'Confirmed' // Chỉ các booking đã xác nhận
-    }).select('checkInDate checkOutDate -_id'); // Chọn các trường cần thiết
+    }).select('checkInDate checkOutDate -_id'); // lấy checkIn checkOut bỏ id
 
     return bookings.map(booking => ({
         start: booking.checkInDate,
@@ -29,7 +34,7 @@ exports.getRooms = asyncHandler(async (req, res) => {
 
     const rooms = await features.query;
 
-    // Nâng cao dữ liệu phòng với thời gian đã được đặt (bookedTime)
+    // bổ sung thêm bookedTime để lưu các thời gian đã book
     const roomsWithBookedTime = await Promise.all(rooms.map(async room => {
         const bookedTime = await getRoomBookedTimes(room._id);
         return {

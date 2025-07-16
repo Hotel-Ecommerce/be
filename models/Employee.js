@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-
+// const mongoose = require('mongoose');
+// const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 const employeeSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   role: { type: String, required: true, enum: ['Manager', 'Admin'] }, // Vai trò của nhân viên
@@ -26,4 +27,5 @@ employeeSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('Employee', employeeSchema);
+
+export default mongoose.model('Employee', employeeSchema);

@@ -14,4 +14,5 @@ router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getCust
 router.post('/update', protect, authorize(['Manager', 'Admin', 'Customer']), updateCustomer);
 router.post('/delete', protect, authorize(['Manager', 'Admin']), deleteCustomer);
 
-module.exports = router;
+
+export default router; 
