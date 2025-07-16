@@ -25,7 +25,7 @@ const getRoomBookedTimes = async (roomId) => {
 
 // Lấy tất cả phòng
 
-exports.getRooms = asyncHandler(async (req, res) => {
+export const getRooms = asyncHandler(async (req, res) => {
     const features = new APIFeatures(Room.find(), req.query)
         .filter() // Xử lý các bộ lọc như type, capacity
         .search(['roomNumber', 'description', 'type']) // Tìm kiếm theo q
@@ -48,7 +48,7 @@ exports.getRooms = asyncHandler(async (req, res) => {
 
 // Thêm phòng mới
 
-exports.addRoom = asyncHandler(async (req, res) => {
+export const addRoom = asyncHandler(async (req, res) => {
     const { roomNumber, type, price, description, capacity } = req.body;
     // req.files chứa thông tin về các file được upload bởi Multer
     const images = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
@@ -95,7 +95,7 @@ exports.addRoom = asyncHandler(async (req, res) => {
 
 // Lấy thông tin phòng bằng ID
 
-exports.getRoomById = asyncHandler(async (req, res) => {
+export const getRoomById = asyncHandler(async (req, res) => {
     const room = await Room.findById(req.params.id);
 
     if (!room) {
@@ -115,7 +115,7 @@ exports.getRoomById = asyncHandler(async (req, res) => {
 
 // Cập nhật thông tin phòng
 
-exports.updateRoom = asyncHandler(async (req, res) => {
+export const updateRoom = asyncHandler(async (req, res) => {
     const { id, roomNumber, type, price, description, capacity, removedImageUrls } = req.body;
     const newImages = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
@@ -179,7 +179,7 @@ exports.updateRoom = asyncHandler(async (req, res) => {
 
 // Xóa phòng
 
-exports.deleteRoom = asyncHandler(async (req, res) => {
+export const deleteRoom = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
     const room = await Room.findById(id);

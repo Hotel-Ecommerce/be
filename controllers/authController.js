@@ -17,7 +17,7 @@ const generateToken = (id, role) => {
 
 //  Đăng ký khách hàng mới
 
-exports.signupCustomer = asyncHandler(async (req, res) => {
+export const signupCustomer = asyncHandler(async (req, res) => {
     const { password, fullName, address, email, phone } = req.body;
 
     // Chỉ kiểm tra email đã tồn tại (email phải là duy nhất)
@@ -52,7 +52,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
 });
 
 
-exports.login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body; // đổi thành email
 
     let user = null;
@@ -92,14 +92,14 @@ exports.login = asyncHandler(async (req, res) => {
 
 // Đăng xuất người dùng (xóa token phía client)
 
-exports.signout = (req, res) => {
+export const signout = (req, res) => {
     res.status(200).json({ message: 'Đăng xuất thành công' });
 };
 
 
 //  Thay đổi mật khẩu
 
-exports.changePassword = asyncHandler(async (req, res) => {
+export const changePassword = asyncHandler(async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     // Lấy thông tin người dùng từ req.user (được gán bởi middleware 'protect')

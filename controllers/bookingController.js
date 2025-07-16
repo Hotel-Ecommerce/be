@@ -29,7 +29,7 @@ const checkRoomAvailability = async (roomId, checkInDate, checkOutDate, currentB
 
 //Lấy tất cả các booking
 
-exports.getBookings = asyncHandler(async (req, res) => {
+export const getBookings = asyncHandler(async (req, res) => {
     let query = Booking.find();
 
     // Cus chỉ có thể xem các booking của chính họ
@@ -56,7 +56,8 @@ exports.getBookings = asyncHandler(async (req, res) => {
 
 // Thêm booking mới
 
-exports.addBooking = asyncHandler(async (req, res) => {
+
+export const addBooking = asyncHandler(async (req, res) => {
     const { customerId, roomId, checkInDate, checkOutDate } = req.body;
 
     // Xác thực ngày tháng
@@ -123,7 +124,8 @@ exports.addBooking = asyncHandler(async (req, res) => {
 // @desc    Lấy thông tin booking bằng ID
 // @route   GET /api/bookings/:id
 // @access  Private/Manager, Admin, Customer
-exports.getBookingById = asyncHandler(async (req, res) => {
+
+export const getBookingById = asyncHandler(async (req, res) => {
     const booking = await Booking.findById(req.params.id)
         .populate('customerId', 'fullName email phone')
         .populate('roomId', 'roomNumber type price');
@@ -144,7 +146,8 @@ exports.getBookingById = asyncHandler(async (req, res) => {
 
 // Cập nhật thông tin booking
 
-exports.updateBooking = asyncHandler(async (req, res) => {
+
+export const updateBooking = asyncHandler(async (req, res) => {
     const { id, customerId, roomId, checkInDate, checkOutDate, totalPrice, status, paymentStatus } = req.body;
 
     const booking = await Booking.findById(id);
@@ -197,7 +200,8 @@ exports.updateBooking = asyncHandler(async (req, res) => {
 
 // Xóa booking
 
-exports.deleteBooking = asyncHandler(async (req, res) => {
+
+export const deleteBooking = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
     const booking = await Booking.findById(id);

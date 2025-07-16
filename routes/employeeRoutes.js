@@ -1,13 +1,13 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
     getEmployees,
     addEmployee,
     getEmployeeById,
     updateEmployee,
     deleteEmployee
-} = require('../controllers/employeeController');
-const protect = require('../middleware/authMiddleware');
-const authorize = require('../middleware/permissionMiddleware');
+} from '../controllers/employeeController.js';
+import protect from '../middleware/authMiddleware.js';
+import authorize from '../middleware/permissionMiddleware.js';
 const router = express.Router();
 
 router.get('/list', protect, authorize(['Manager']), getEmployees);

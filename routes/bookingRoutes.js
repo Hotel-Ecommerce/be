@@ -1,13 +1,13 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
     getBookings,
     addBooking,
     getBookingById,
     updateBooking,
     deleteBooking
-} = require('../controllers/bookingController');
-const protect = require('../middleware/authMiddleware');
-const authorize = require('../middleware/permissionMiddleware');
+} from '../controllers/bookingController.js';
+import protect from '../middleware/authMiddleware.js';
+import authorize from '../middleware/permissionMiddleware.js';
 const router = express.Router();
 
 router.get('/list', protect, authorize(['Manager', 'Admin', 'Customer']), getBookings);

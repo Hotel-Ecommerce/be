@@ -1,9 +1,23 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const cors = require('cors');
-const path = require('path');
-const Employee = require('./models/Employee');
+// const express = require('express');
+// const dotenv = require('dotenv');
+// const connectDB = require('./config/db');
+// const cors = require('cors');
+// const path = require('path');
+// const Employee = require('./models/Employee');
+
+import express from "express";
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import cors from 'cors';
+import path from 'path';
+import Employee from './models/Employee.js';
+
+// sử dụng __dirname lấy địa chỉ
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Tải biến môi trường
 dotenv.config();
@@ -21,12 +35,12 @@ app.use(cors()); // Kích hoạt CORS
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Import các route
-const authRoutes = require('./routes/authRoutes');
-const customerRoutes = require('./routes/customerRoutes');
-const roomRoutes = require('./routes/roomRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
-const employeeRoutes = require('./routes/employeeRoutes');
-const statisticRoutes = require('./routes/statisticRoutes');
+import authRoutes from './routes/authRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import roomRoutes from './routes/roomRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
+import employeeRoutes from './routes/employeeRoutes.js';
+import statisticRoutes from './routes/statisticRoutes.js';
 
 // Gắn các route
 app.use('/auth', authRoutes);

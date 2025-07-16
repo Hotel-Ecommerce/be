@@ -8,7 +8,8 @@ import APIFeatures from '../utils/apiFeatures.js';
 
 // Lấy tất cả khách hàng
 
-exports.getCustomers = asyncHandler(async (req, res) => {
+
+export const getCustomers = asyncHandler(async (req, res) => {
     const features = new APIFeatures(Customer.find(), req.query)
         .search(['fullName', 'email', 'phone'])
         .sort()
@@ -20,7 +21,7 @@ exports.getCustomers = asyncHandler(async (req, res) => {
 
 // Lấy khách hàng theo ID
 
-exports.getCustomerById = asyncHandler(async (req, res) => {
+export const getCustomerById = asyncHandler(async (req, res) => {
     const customer = await Customer.findById(req.params.id);
 
     if (!customer) {
@@ -39,7 +40,7 @@ exports.getCustomerById = asyncHandler(async (req, res) => {
 
 // Cập nhật thông tin khách hàng
 
-exports.updateCustomer = asyncHandler(async (req, res) => {
+export const updateCustomer = asyncHandler(async (req, res) => {
     const { id, fullName, email, phone, address } = req.body;
 
     const customer = await Customer.findById(id);
@@ -77,7 +78,7 @@ exports.updateCustomer = asyncHandler(async (req, res) => {
 
 // Xóa khách hàng
 
-exports.deleteCustomer = asyncHandler(async (req, res) => {
+export const deleteCustomer = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
     const customer = await Customer.findById(id);
