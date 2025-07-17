@@ -1,19 +1,18 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const {
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import {
     getRooms,
     addRoom,
     getRoomById,
     updateRoom,
-    deleteRoom,
-    getAvailableRooms
+    deleteRoom
 } = require('../controllers/roomController');
 const protect = require('../middleware/authMiddleware');
 const authorize = require('../middleware/permissionMiddleware');
 const router = express.Router();
 
-// Cấu hình Multer để lưu trữ hình ảnh
+// sử dụng Multer để lưu trữ hình ảnh
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/'); // Lưu hình ảnh vào thư mục 'uploads'
@@ -33,4 +32,5 @@ router.get('/:id', getRoomById); // Công khai, không cần xác thực
 router.post('/update', protect, authorize(['Manager', 'Admin']), upload.array('images', 5), updateRoom);
 router.post('/delete', protect, authorize(['Manager', 'Admin']), deleteRoom);
 
-module.exports = router;
+
+export default router;

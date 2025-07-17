@@ -1,10 +1,9 @@
-const Employee = require('../models/Employee');
-const asyncHandler = require('../utils/errorHandler');
-const APIFeatures = require('../utils/apiFeatures');
-
+import Employee from '../models/Employee.js';
+import asyncHandler from '../utils/errorHandler.js';
+import APIFeatures from '../utils/apiFeatures.js';
 // Lấy tất cả nhân viên
 
-exports.getEmployees = asyncHandler(async (req, res) => {
+export const getEmployees = asyncHandler(async (req, res) => {
     const features = new APIFeatures(Employee.find(), req.query)
         .search(['fullName', 'email', 'phone'])
         .filter() // Để xử lý bộ lọc vai trò
@@ -17,7 +16,7 @@ exports.getEmployees = asyncHandler(async (req, res) => {
 
 // Thêm nhân viên mới
 
-exports.addEmployee = asyncHandler(async (req, res) => {
+export const addEmployee = asyncHandler(async (req, res) => {
     const { fullName, role, email, phone, password } = req.body;
 
     // Kiểm tra email đã tồn tại chưa
@@ -58,7 +57,7 @@ exports.addEmployee = asyncHandler(async (req, res) => {
 
 // Lấy thông tin nhân viên bằng ID
 
-exports.getEmployeeById = asyncHandler(async (req, res) => {
+export const getEmployeeById = asyncHandler(async (req, res) => {
     const employee = await Employee.findById(req.params.id).select('-password');
 
     if (!employee) {
@@ -70,7 +69,7 @@ exports.getEmployeeById = asyncHandler(async (req, res) => {
 
 // Cập nhật thông tin nhân viên
 
-exports.updateEmployee = asyncHandler(async (req, res) => {
+export const updateEmployee = asyncHandler(async (req, res) => {
     const { id, fullName, role, email, phone } = req.body;
 
     const employee = await Employee.findById(id);
@@ -110,7 +109,7 @@ exports.updateEmployee = asyncHandler(async (req, res) => {
 
 // Xóa nhân viên
 
-exports.deleteEmployee = asyncHandler(async (req, res) => {
+export const deleteEmployee = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
     const employee = await Employee.findById(id);

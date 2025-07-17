@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const Customer = require('../models/Customer');
-const Employee = require('../models/Employee');
-const asyncHandler = require('../utils/errorHandler');
-const { jwtSecret, jwtExpiresIn } = require('../config/jwt');
+import jwt from 'jsonwebtoken';
+import Customer from '../models/Customer.js';
+import Employee from '../models/Employee.js';
+import asyncHandler from '../utils/errorHandler.js';
+import { jwtSecret, jwtExpiresIn } from '../config/jwt.js';
 
 // Hàm tạo JWT
 const generateToken = (id, role) => {
@@ -11,7 +11,7 @@ const generateToken = (id, role) => {
 
 //  Đăng ký khách hàng mới
 
-exports.signupCustomer = asyncHandler(async (req, res) => {
+export const signupCustomer = asyncHandler(async (req, res) => {
     const { password, fullName, address, email, phone } = req.body;
 
     // Chỉ kiểm tra email đã tồn tại (email phải là duy nhất)
@@ -26,7 +26,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
         email,
         phone,
         address,
-        password // Mật khẩu sẽ được mã hóa
+        password // Mật khẩu sẽ được mã hóa qua models
     });
 
     if (customer) {
@@ -36,7 +36,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
             email: customer.email,
             phone: customer.phone,
             address: customer.address,
-            role: 'Customer', // Đặt vai trò rõ ràng
+            role: 'Customer', // Đặt vai trò Customer
             token: generateToken(customer._id, 'Customer')
         });
     } else {
@@ -46,7 +46,7 @@ exports.signupCustomer = asyncHandler(async (req, res) => {
 });
 
 
-exports.login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body; // đổi thành email
 
     let user = null;
@@ -74,7 +74,7 @@ exports.login = asyncHandler(async (req, res) => {
             fullName: user.fullName,
             email: user.email,
             phone: user.phone,
-            address: user.address || user.role, // Với nhân viên, địa chỉ có thể không tồn tại, dùng vai trò thay thế
+            address: user.address,
             role: role,
             token: generateToken(user._id, role)
         });
@@ -84,9 +84,41 @@ exports.login = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Đăng xuất người dùng (xóa token phía client)
-// @route   POST /auth/signout
-// @access  Public
-exports.signout = (req, res) => {
+// Đăng xuất người dùng (xóa token phía client)
+
+export const signout = (req, res) => {
     res.status(200).json({ message: 'Đăng xuất thành công' });
 };
+
+
+//  Thay đổi mật khẩu
+
+export const changePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    // Lấy thông tin người dùng từ req.user (được gán bởi middleware 'protect')
+    let user;
+    if (req.user.role === 'Customer') {
+        user = await Customer.findById(req.user._id);
+    } else { // dành cho Manager hoặc Admin tìm trong Employee
+        user = await Employee.findById(req.user._id);
+    }
+
+    if (!user) {
+        res.status(404);
+        throw new Error('Không tìm thấy user trong database.');
+    }
+
+    // 1. Kiểm tra mật khẩu hiện tại nhập đúng chưa
+    if (!(await user.matchPassword(currentPassword))) {
+        res.status(400);
+        throw new Error('Mật khẩu hiện tại không đúng.');
+    }
+
+    // 2. Cập nhật mật khẩu mới
+    // sử dụng hash password qua pre của mongoDB
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Mật khẩu đã được thay đổi thành công.' });
+});

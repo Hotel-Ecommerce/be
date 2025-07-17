@@ -1,12 +1,12 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
     getCustomers,
     getCustomerById,
     updateCustomer,
     deleteCustomer
-} = require('../controllers/customerController');
-const protect = require('../middleware/authMiddleware');
-const authorize = require('../middleware/permissionMiddleware');
+} from '../controllers/customerController.js';
+import protect from '../middleware/authMiddleware.js';
+import authorize from '../middleware/permissionMiddleware.js';
 const router = express.Router();
 
 router.get('/list', protect, authorize(['Manager', 'Admin']), getCustomers);
@@ -14,4 +14,5 @@ router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getCust
 router.post('/update', protect, authorize(['Manager', 'Admin', 'Customer']), updateCustomer);
 router.post('/delete', protect, authorize(['Manager', 'Admin']), deleteCustomer);
 
-module.exports = router;
+
+export default router; 

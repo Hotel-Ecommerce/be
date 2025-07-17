@@ -1,16 +1,15 @@
-const Room = require('../models/Room');
-const Booking = require('../models/Booking');
-const asyncHandler = require('../utils/errorHandler');
-const APIFeatures = require('../utils/apiFeatures');
-const path = require('path');
-const fs = require('fs');
-
+import Room from '../models/Room.js';
+import Booking from '../models/Booking.js';
+import asyncHandler from '../utils/errorHandler.js';
+import APIFeatures from '../utils/apiFeatures.js';
+import path from 'path';
+import fs from 'fs';
 // lấy thời gian đã được đặt cho một phòng
 const getRoomBookedTimes = async (roomId) => {
     const bookings = await Booking.find({
         roomId: roomId,
         status: 'Confirmed' // Chỉ các booking đã xác nhận
-    }).select('checkInDate checkOutDate -_id'); // Chọn các trường cần thiết
+    }).select('checkInDate checkOutDate -_id'); // lấy checkIn checkOut bỏ id
 
     return bookings.map(booking => ({
         start: booking.checkInDate,
@@ -20,7 +19,7 @@ const getRoomBookedTimes = async (roomId) => {
 
 // Lấy tất cả phòng
 
-exports.getRooms = asyncHandler(async (req, res) => {
+export const getRooms = asyncHandler(async (req, res) => {
     const features = new APIFeatures(Room.find(), req.query)
         .filter() // Xử lý các bộ lọc như type, capacity
         .search(['roomNumber', 'description', 'type']) // Tìm kiếm theo q
@@ -29,7 +28,7 @@ exports.getRooms = asyncHandler(async (req, res) => {
 
     const rooms = await features.query;
 
-    // Nâng cao dữ liệu phòng với thời gian đã được đặt (bookedTime)
+    // bổ sung thêm bookedTime để lưu các thời gian đã book
     const roomsWithBookedTime = await Promise.all(rooms.map(async room => {
         const bookedTime = await getRoomBookedTimes(room._id);
         return {
@@ -88,7 +87,7 @@ exports.getAvailableRooms = asyncHandler(async (req, res) => {
 
 // Thêm phòng mới
 
-exports.addRoom = asyncHandler(async (req, res) => {
+export const addRoom = asyncHandler(async (req, res) => {
     const { roomNumber, type, price, description, capacity } = req.body;
     // req.files chứa thông tin về các file được upload bởi Multer
     const images = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
@@ -135,7 +134,7 @@ exports.addRoom = asyncHandler(async (req, res) => {
 
 // Lấy thông tin phòng bằng ID
 
-exports.getRoomById = asyncHandler(async (req, res) => {
+export const getRoomById = asyncHandler(async (req, res) => {
     const room = await Room.findById(req.params.id);
 
     if (!room) {
@@ -155,7 +154,7 @@ exports.getRoomById = asyncHandler(async (req, res) => {
 
 // Cập nhật thông tin phòng
 
-exports.updateRoom = asyncHandler(async (req, res) => {
+export const updateRoom = asyncHandler(async (req, res) => {
     const { id, roomNumber, type, price, description, capacity, removedImageUrls } = req.body;
     const newImages = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
@@ -219,7 +218,7 @@ exports.updateRoom = asyncHandler(async (req, res) => {
 
 // Xóa phòng
 
-exports.deleteRoom = asyncHandler(async (req, res) => {
+export const deleteRoom = asyncHandler(async (req, res) => {
     const { id } = req.body;
 
     const room = await Room.findById(id);

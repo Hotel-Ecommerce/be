@@ -1,9 +1,8 @@
-const Booking = require('../models/Booking');
-const asyncHandler = require('../utils/errorHandler');
-
+import Booking from '../models/Booking.js';
+import asyncHandler from '../utils/errorHandler.js';
 // Lấy thống kê đặt phòng
 
-exports.getBookingStatistics = asyncHandler(async (req, res) => {
+export const getBookingStatistics = asyncHandler(async (req, res) => {
     const { startDate, endDate, groupBy = 'day' } = req.query;
 
     if (!startDate || !endDate) {
@@ -13,7 +12,7 @@ exports.getBookingStatistics = asyncHandler(async (req, res) => {
 
     const start = new Date(startDate);
     const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999); // Đảm bảo ngày kết thúc bao gồm toàn bộ ngày đó
+    end.setHours(23, 59, 59, 999);
 
     if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) {
         res.status(400);
