@@ -41,6 +41,51 @@ exports.getRooms = asyncHandler(async (req, res) => {
     res.json(roomsWithBookedTime);
 });
 
+
+exports.getAvailableRooms = asyncHandler(async (req, res) => {
+    const { checkInDate, checkOutDate } = req.query;
+
+    if (!checkInDate || !checkOutDate) {
+        res.status(400);
+        throw new Error('Vui lòng cung cấp checkInDate và checkOutDate');
+    }
+
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(checkOutDate);
+
+    if (isNaN(checkIn) || isNaN(checkOut) || checkIn >= checkOut) {
+        res.status(400);
+        throw new Error('Ngày check-in và check-out không hợp lệ');
+    }
+
+    // Tìm tất cả các roomId có booking trùng thời gian
+    const overlappingBookings = await Booking.find({
+        status: 'Confirmed',
+        $or: [
+            {
+                checkInDate: { $lt: checkOut },
+                checkOutDate: { $gt: checkIn }
+            }
+        ]
+    }).select('roomId -_id');
+
+    const bookedRoomIds = overlappingBookings.map(b => b.roomId.toString());
+
+    // Lọc ra các phòng không nằm trong danh sách đã bị đặt
+    const features = new APIFeatures(
+        Room.find({ _id: { $nin: bookedRoomIds } }),
+        req.query
+    )
+        .filter() // Lọc theo type, capacity,...
+        .search(['roomNumber', 'description', 'type'])
+        .sort()
+        .paginate();
+
+    const availableRooms = await features.query;
+
+    res.json(availableRooms);
+});
+
 // Thêm phòng mới
 
 exports.addRoom = asyncHandler(async (req, res) => {
