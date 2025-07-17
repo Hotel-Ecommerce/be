@@ -7,9 +7,9 @@ import {
     getRoomById,
     updateRoom,
     deleteRoom
-} = require('../controllers/roomController');
-const protect = require('../middleware/authMiddleware');
-const authorize = require('../middleware/permissionMiddleware');
+} from '../controllers/roomController.js';
+import protect from '../middleware/authMiddleware.js';
+import authorize from '../middleware/permissionMiddleware.js';
 const router = express.Router();
 
 // sử dụng Multer để lưu trữ hình ảnh
