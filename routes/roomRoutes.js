@@ -6,7 +6,8 @@ import {
     addRoom,
     getRoomById,
     updateRoom,
-    deleteRoom
+    deleteRoom,
+    getAvailableRooms
 } from '../controllers/roomController.js';
 import protect from '../middleware/authMiddleware.js';
 import authorize from '../middleware/permissionMiddleware.js';

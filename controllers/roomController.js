@@ -41,7 +41,7 @@ export const getRooms = asyncHandler(async (req, res) => {
 });
 
 
-exports.getAvailableRooms = asyncHandler(async (req, res) => {
+export const getAvailableRooms = asyncHandler(async (req, res) => {
     const { checkInDate, checkOutDate } = req.query;
 
     if (!checkInDate || !checkOutDate) {
