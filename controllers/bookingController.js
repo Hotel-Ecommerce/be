@@ -61,7 +61,7 @@ export const addBooking = asyncHandler(async (req, res) => {
 
     if (isNaN(inDate.getTime()) || isNaN(outDate.getTime()) || inDate >= outDate) {
         res.status(400);
-        throw new Error('Khoảng ngày không hợp lệ…');
+        throw new Error('Khoảng ngày không hợp lệ');
     }
 
     const today = new Date();
