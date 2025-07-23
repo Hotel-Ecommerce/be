@@ -116,8 +116,8 @@ export const addBooking = asyncHandler(async (req, res) => {
     res.status(201).json(booking);
 });
 
-// @desc    Lấy thông tin booking bằng ID
-// @route   GET /api/bookings/:id
+//  Lấy thông tin booking bằng ID
+// @route   GET /bookings/:id
 // @access  Private/Manager, Admin, Customer
 
 export const getBookingById = asyncHandler(async (req, res) => {
@@ -208,4 +208,43 @@ export const deleteBooking = asyncHandler(async (req, res) => {
 
     await booking.deleteOne();
     res.json({ status: 'success', message: 'Booking deleted successfully' });
+});
+
+
+// chuyển trạng thái Booking từ Unpaid sang Paid
+export const markBookingPaid = asyncHandler(async (req, res) => {
+    const bookingId = req.params.id;
+
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+        res.status(404);
+        throw new Error('Không tìm thấy đặt phòng.');
+    }
+
+    // Kiểm tra quyền truy cập:
+    // - Manager/Admin có thể thay đổi trạng thái của mọi booking
+    // - Customer chỉ có thể thay đổi trạng thái thanh toán của booking của chính họ
+    //   và chỉ khi trạng thái hiện tại là 'Unpaid'
+    if (req.user.role === 'Customer' && booking.customerId.toString() !== req.user._id.toString()) {
+        res.status(403);
+        throw new Error('Bạn không có quyền cập nhật đặt phòng này.');
+    }
+
+    // Chỉ cho phép chuyển từ 'Unpaid' sang 'Paid'
+    if (booking.paymentStatus === 'Paid') {
+        res.status(400);
+        throw new Error('Đặt phòng đã được thanh toán rồi.');
+    }
+    if (booking.paymentStatus === 'Cancelled') {
+        res.status(400);
+        throw new Error('Đặt phòng đã bị hủy, không thể cập nhật trạng thái thanh toán.');
+    }
+
+    booking.paymentStatus = 'Paid';
+    booking.updatedAt = Date.now();
+
+    const updatedBooking = await booking.save();
+
+    res.json(updatedBooking);
 });
