@@ -1,6 +1,7 @@
 import Employee from '../models/Employee.js';
 import asyncHandler from '../utils/errorHandler.js';
 import APIFeatures from '../utils/apiFeatures.js';
+import bcrypt from 'bcryptjs';
 // Lấy tất cả nhân viên
 
 export const getEmployees = asyncHandler(async (req, res) => {
@@ -121,4 +122,47 @@ export const deleteEmployee = asyncHandler(async (req, res) => {
 
     await employee.deleteOne();
     res.json({ status: 'success', message: 'Employee deleted successfully' });
+});
+
+// @desc    Đặt lại mật khẩu cho nhân viên khác (Manager hoặc Admin)
+// @route   POST /employees/resetPassword
+// Chỉ có manager mới thay đổi được mật khẩu của manager khác và admin. Admin có thể thay đổi mật khẩu của admin khác
+export const resetEmployeePassword = asyncHandler(async (req, res) => {
+    const { id, newPassword } = req.body; // id là ID của nhân viên cần đặt lại mật khẩu
+
+    const employee = await Employee.findById(id); // Nhân viên cần đặt lại mật khẩu
+
+    if (!employee) {
+        res.status(404);
+        throw new Error('Không tìm thấy nhân viên.');
+    }
+
+    const requestingUser = req.user; // Người dùng đang thực hiện request (Manager hoặc Admin)
+
+    // --- KIỂM TRA QUYỀN ĐẶT LẠI MẬT KHẨU ---
+    // 1. Ngăn không cho người dùng tự đặt lại mật khẩu của chính mình qua API này
+    // (họ nên dùng API changePassword chung)
+    if (requestingUser._id.toString() === id) {
+        res.status(403);
+        throw new Error('Bạn không thể đặt lại mật khẩu của chính mình qua API này. Vui lòng sử dụng chức năng changePassword.');
+    }
+
+    // 2. Chỉ Manager mới có quyền đặt lại mật khẩu của Manager khác hoặc Admin
+    if (requestingUser.role === 'Manager') {
+        if (employee.role !== 'Manager' && employee.role !== 'Admin') {
+            res.status(403);
+            throw new Error('Manager chỉ có thể đặt lại mật khẩu của các Manager khác hoặc Admin.');
+        }
+    } else { // Nếu người dùng không phải là Manager (tức là Admin hoặc vai trò khác)
+        res.status(403); // Forbidden
+        throw new Error('Bạn không có quyền đặt lại mật khẩu cho nhân viên khác qua API này.');
+    }
+
+    // Hash mật khẩu mới
+    const salt = await bcrypt.genSalt(10);
+    employee.password = await bcrypt.hash(newPassword, salt);
+
+    await employee.save(); // Lưu mật khẩu đã hash vào DB
+
+    res.status(200).json({ message: 'Mật khẩu đã được đặt lại thành công.' });
 });

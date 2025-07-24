@@ -4,7 +4,8 @@ import {
     addEmployee,
     getEmployeeById,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    resetEmployeePassword
 } from '../controllers/employeeController.js';
 import protect from '../middleware/authMiddleware.js';
 import authorize from '../middleware/permissionMiddleware.js';
@@ -15,6 +16,6 @@ router.post('/add', protect, authorize(['Manager']), addEmployee);
 router.get('/:id', protect, authorize(['Manager']), getEmployeeById);
 router.post('/update', protect, authorize(['Manager']), updateEmployee);
 router.post('/delete', protect, authorize(['Manager']), deleteEmployee);
-
+router.post('/resetPassword', protect, authorize(['Manager']), resetEmployeePassword);
 
 export default router;
