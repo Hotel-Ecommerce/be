@@ -18,7 +18,7 @@ const router = express.Router();
 
 router.get('/list', protect, authorize(['Manager', 'Admin', 'Customer']), getBookings);
 router.post('/add', protect, authorize(['Manager', 'Admin', 'Customer']), addBooking); // thêm đặt phòng mới
-router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getBookingById); // lấy thông tin đạt phòng qua Id
+
 router.post('/update', protect, authorize(['Manager', 'Admin']), updateBooking);
 router.post('/delete', protect, authorize(['Manager', 'Admin', 'Customer']), deleteBooking);  //Customer xóa booking của chính họ, Manager và Admin xóa bất kỳ booking nào.
 router.put('/markBookingPaid/:id', protect, authorize(['Manager', 'Admin', 'Customer']), markBookingPaid); // đánh dấu đã thanh toan1
@@ -37,6 +37,6 @@ router.put('/bookingChangeRequests/:id/approve', protect, authorize(['Manager', 
 // Admin, Manager từ chối yêu cầu thay đổi/hủy booking
 router.put('/bookingChangeRequests/:id/disapprove', protect, authorize(['Manager', 'Admin']), disapproveBookingChangeRequest);
 
-
+router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getBookingById); // lấy thông tin đạt phòng qua Id, chuyển xuống cuối để tránh lỗi
 
 export default router;
