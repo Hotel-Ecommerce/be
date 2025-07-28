@@ -318,7 +318,7 @@ const cancelConflictingBookings = async (roomId, checkInDate, checkOutDate, appr
 
 
 // @desc    Khách hàng gửi yêu cầu thay đổi booking
-// @route   POST /bookingChangeRequests/update
+// @route   POST /bookings/bookingChangeRequests/update
 // @access  Private/Customer
 export const requestBookingChange = asyncHandler(async (req, res) => {
     const { bookingId, requestedRoomId, requestedCheckInDate, requestedCheckOutDate } = req.body;
@@ -388,7 +388,7 @@ export const requestBookingChange = asyncHandler(async (req, res) => {
 });
 
 // @desc    Khách hàng gửi yêu cầu hủy booking
-// @route   POST /bookingChangeRequests/cancel
+// @route   POST /bookings/bookingChangeRequests/cancel
 // @access  Private/Customer
 export const requestBookingCancellation = asyncHandler(async (req, res) => {
     const { bookingId, cancellationReason } = req.body;
@@ -440,7 +440,7 @@ export const requestBookingCancellation = asyncHandler(async (req, res) => {
 
 
 // @desc    Lấy tất cả các yêu cầu thay đổi booking (cho Admin/Manager)
-// @route   GET /bookingChangeRequests
+// @route   GET /bookings/bookingChangeRequests
 // @access  Private/Manager, Admin
 export const getBookingChangeRequests = asyncHandler(async (req, res) => {
     // Chỉ Admin và Manager mới có quyền xem tất cả các yêu cầu
@@ -475,13 +475,13 @@ export const getBookingChangeRequests = asyncHandler(async (req, res) => {
 });
 
 // @desc    Admin phê duyệt yêu cầu thay đổi booking
-// @route   PUT /booking-change-requests/:id/approve
+// @route   PUT /bookings/bookingChangeRequests/:id/approve
 // @access  Private/Admin
 export const approveBookingChangeRequest = asyncHandler(async (req, res) => {
     const requestId = req.params.id;
 
-    // Chỉ Admin mới có quyền phê duyệt
-    if (req.user.role !== 'Admin') {
+    // Chỉ Admin/ Manager mới có quyền phê duyệt
+    if (req.user.role == 'Customer') {
         res.status(403);
         throw new Error('Bạn không có quyền phê duyệt yêu cầu thay đổi đặt phòng.');
     }
@@ -593,7 +593,7 @@ export const approveBookingChangeRequest = asyncHandler(async (req, res) => {
 });
 
 // @desc    Admin từ chối yêu cầu thay đổi booking
-// @route   PUT /booking-change-requests/:id/disapprove
+// @route   PUT /bookings/bookingChangeRequests/:id/disapprove
 // @access  Private/Admin
 export const disapproveBookingChangeRequest = asyncHandler(async (req, res) => {
     const requestId = req.params.id;

@@ -13,8 +13,8 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Tải biến môi trường
-dotenv.config();
+
+dotenv.config(); // Tải biến môi trường
 
 
 
@@ -45,7 +45,7 @@ app.use('/employees', employeeRoutes);
 app.use('/statistics', statisticRoutes);
 
 
-// tạo user mặc định khi khởi chạy user
+// tạo user mặc định khi khởi chạy server
 const createDefaultUsers = async () => {
     try {
         // Kiểm tra và tạo Manager
@@ -60,7 +60,7 @@ const createDefaultUsers = async () => {
             });
             console.log('Default Manager da tao:', manager.email);
         } else {
-            console.log('Da ton tai:', manager.email);
+            console.log('Default Manager da ton tai:', manager.email);
         }
 
         // Kiểm tra và tạo Admin
