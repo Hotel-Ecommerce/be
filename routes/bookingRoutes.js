@@ -21,7 +21,7 @@ router.post('/add', protect, authorize(['Manager', 'Admin', 'Customer']), addBoo
 
 router.post('/update', protect, authorize(['Manager', 'Admin']), updateBooking);
 router.post('/delete', protect, authorize(['Manager', 'Admin', 'Customer']), deleteBooking);  //Customer xóa booking của chính họ, Manager và Admin xóa bất kỳ booking nào.
-router.put('/markBookingPaid/:id', protect, authorize(['Manager', 'Admin', 'Customer']), markBookingPaid); // đánh dấu đã thanh toan1
+
 
 //Route Yêu cầu Thay đổi/Hủy Booking
 
@@ -36,7 +36,7 @@ router.get('/bookingChangeRequests', protect, authorize(['Manager', 'Admin']), g
 router.put('/bookingChangeRequests/:id/approve', protect, authorize(['Manager', 'Admin']), approveBookingChangeRequest);
 // Admin, Manager từ chối yêu cầu thay đổi/hủy booking
 router.put('/bookingChangeRequests/:id/disapprove', protect, authorize(['Manager', 'Admin']), disapproveBookingChangeRequest);
-
+router.put('/markBookingPaid/:id', protect, authorize(['Manager', 'Admin', 'Customer']), markBookingPaid); // đánh dấu đã thanh toan1
 router.get('/:id', protect, authorize(['Manager', 'Admin', 'Customer']), getBookingById); // lấy thông tin đạt phòng qua Id, chuyển xuống cuối để tránh lỗi
 
 export default router;

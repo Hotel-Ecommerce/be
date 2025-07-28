@@ -476,7 +476,7 @@ export const getBookingChangeRequests = asyncHandler(async (req, res) => {
 
 // @desc    Admin phê duyệt yêu cầu thay đổi booking
 // @route   PUT /bookings/bookingChangeRequests/:id/approve
-// @access  Private/Admin
+// @access  Private/Admin Manager
 export const approveBookingChangeRequest = asyncHandler(async (req, res) => {
     const requestId = req.params.id;
 

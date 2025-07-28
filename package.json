@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Hotel-Ecommerce/be#readme",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
