@@ -6,6 +6,7 @@ const employeeSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   phone: { type: String },
   password: { type: String, required: true },
+  refreshToken: { type: String }, // bổ sung thêm refreshToken
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
