@@ -5,6 +5,9 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import path from 'path';
 import Employee from './models/Employee.js';
+import cookieParser from 'cookie-parser';
+import errorHandler from './middleware/errorHandler.js';
+
 
 // sử dụng __dirname lấy địa chỉ
 import { fileURLToPath } from 'url';
@@ -23,7 +26,11 @@ const app = express();
 // Middleware
 app.use(express.json()); // Phân tích cú pháp body JSON
 app.use(express.urlencoded({ extended: true })); // Phân tích cú pháp dữ liệu URL-encoded
-app.use(cors()); // Kích hoạt CORS 
+app.use(cors({
+    origin: 'http://localhost:7079',
+    credentials: true // Cho phép gửi cookie qua các cross-origin request
+}));
+app.use(cookieParser()); // Sử dụng cookie-parser middleware
 
 // Phục vụ các file tĩnh (hình ảnh đã upload)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -43,6 +50,7 @@ app.use('/rooms', roomRoutes);
 app.use('/bookings', bookingRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/statistics', statisticRoutes);
+app.use(errorHandler);
 
 
 // tạo user mặc định khi khởi chạy server
