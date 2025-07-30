@@ -27,9 +27,10 @@ const app = express();
 app.use(express.json()); // Phân tích cú pháp body JSON
 app.use(express.urlencoded({ extended: true })); // Phân tích cú pháp dữ liệu URL-encoded
 app.use(cors({
-    origin: 'http://localhost:7079',
-    credentials: true // Cho phép gửi cookie qua các cross-origin request
+    origin: true,
+    credentials: true
 }));
+
 app.use(cookieParser()); // Sử dụng cookie-parser middleware
 
 // Phục vụ các file tĩnh (hình ảnh đã upload)
