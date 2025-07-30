@@ -81,9 +81,15 @@ export const deleteCustomer = asyncHandler(async (req, res) => {
 
     if (!customer) {
         res.status(404);
-        throw new Error('Không tìm thấy khách hàng...');
+        throw new Error('Không tìm thấy khách hàng');
     }
+    if (customer.isActive === false) {
+        res.status(400);
+        throw new Error('Tài khoản này đã bị xoá.');
+    }
+    customer.isActive = false;
+    customer.updatedAt = Date.now()
+    await customer.save()
+    res.json({ status: 'success', message: 'Xoá thành công' });
 
-    await customer.deleteOne();
-    res.json({ status: 'success', message: 'Customer deleted successfully' });
 });

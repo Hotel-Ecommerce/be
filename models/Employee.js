@@ -7,7 +7,7 @@ const employeeSchema = new mongoose.Schema({
   phone: { type: String },
   password: { type: String, required: true },
   refreshToken: { type: String }, // bổ sung thêm refreshToken
-  isActive: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: true }, // soft delete
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
