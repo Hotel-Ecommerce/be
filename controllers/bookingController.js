@@ -27,7 +27,7 @@ const checkRoomAvailability = async (roomId, checkInDate, checkOutDate, currentB
 export const getBookings = asyncHandler(async (req, res) => {
     let query = Booking.find();
 
-    // Customer only sees their own bookings
+    // chỉ khách hàng mới có thể xem booking của chính mình
     if (req.user.role === 'Customer') {
         query = query.where('customerId').equals(req.user._id);
     } else {
