@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 // Lấy tất cả nhân viên
 
 export const getEmployees = asyncHandler(async (req, res) => {
-    const features = new APIFeatures(Employee.find(), req.query)
+    const features = new APIFeatures(Employee.find({ isActive: true }), req.query)
         .search(['fullName', 'email', 'phone'])
         .filter() // Để xử lý bộ lọc vai trò
         .sort()
@@ -59,7 +59,7 @@ export const addEmployee = asyncHandler(async (req, res) => {
 // Lấy thông tin nhân viên bằng ID
 
 export const getEmployeeById = asyncHandler(async (req, res) => {
-    const employee = await Employee.findById(req.params.id).select('-password');
+    const employee = await Employee.findOne({ _id: req.params.id, isActive: true }).select('-password');
 
     if (!employee) {
         res.status(404);
@@ -73,7 +73,7 @@ export const getEmployeeById = asyncHandler(async (req, res) => {
 export const updateEmployee = asyncHandler(async (req, res) => {
     const { id, fullName, role, email, phone } = req.body;
 
-    const employee = await Employee.findById(id);
+    const employee = await Employee.findOne({ _id: id, isActive: true });
 
     if (!employee) {
         res.status(404);
@@ -115,12 +115,14 @@ export const deleteEmployee = asyncHandler(async (req, res) => {
 
     const employee = await Employee.findById(id);
 
-    if (!employee) {
+    if (!employee || !employee.isActive) {
         res.status(404);
         throw new Error('Không tìm thấy nhân viên...');
     }
 
-    await employee.deleteOne();
+    employee.isActive = false;
+    await employee.save();
+
     res.json({ status: 'success', message: 'Employee deleted successfully' });
 });
 
@@ -130,7 +132,7 @@ export const deleteEmployee = asyncHandler(async (req, res) => {
 export const resetEmployeePassword = asyncHandler(async (req, res) => {
     const { id, newPassword } = req.body; // id là ID của nhân viên cần đặt lại mật khẩu
 
-    const employee = await Employee.findById(id); // Nhân viên cần đặt lại mật khẩu
+    const employee = await Employee.findOne({ _id: id, isActive: true }); 
 
     if (!employee) {
         res.status(404);

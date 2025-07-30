@@ -84,7 +84,7 @@ export const login = asyncHandler(async (req, res) => {
 
     // Nếu không tìm thấy trong Customer, cố gắng tìm trong Employee
     if (!user) {
-        const employee = await Employee.findOne({ email: email });
+        const employee = await Employee.findOne({ email: email, isActive: true });
         if (employee && (await employee.matchPassword(password))) {
             user = employee;
             role = employee.role; // Manager hoặc Admin
