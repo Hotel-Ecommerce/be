@@ -453,36 +453,46 @@ export const requestBookingCancellation = asyncHandler(async (req, res) => {
 // @route   GET /bookings/bookingChangeRequests
 // @access  Private/Manager, Admin
 export const getBookingChangeRequests = asyncHandler(async (req, res) => {
-    // Chỉ Admin và Manager mới có quyền xem tất cả các yêu cầu
+    // Only Admin and Manager can access
     if (req.user.role !== 'Admin' && req.user.role !== 'Manager') {
         res.status(403);
         throw new Error('Bạn không có quyền xem các yêu cầu thay đổi đặt phòng.');
     }
 
-    const { status, customerId, bookingId, type } = req.query; // Thêm type vào query
-    let query = {};
+    const { status, customerId, bookingId, type } = req.query;
+    const query = {};
 
-    if (status) {
-        query.status = status;
-    }
-    if (customerId) {
-        query.customerId = customerId;
-    }
-    if (bookingId) {
-        query.bookingId = bookingId;
-    }
-    if (type) { // Lọc theo type
-        query.type = type;
-    }
+    if (status) query.status = status;
+    if (customerId) query.customerId = customerId;
+    if (bookingId) query.bookingId = bookingId;
+    if (type) query.type = type;
 
     const requests = await BookingChangeRequest.find(query)
-        .populate('bookingId', 'checkInDate checkOutDate roomId status') // Lấy thêm status của booking gốc
-        .populate('customerId', 'fullName email phone')
-        .populate('requestedRoomId', 'roomNumber type price') // Có thể null nếu là yêu cầu hủy
-        .populate('approvedBy', 'fullName email role'); // Thông tin người phê duyệt
+        .populate({
+            path: 'bookingId',
+            populate: [
+                { path: 'roomId' }, // full room info
+                { path: 'customerId', select: 'fullName email phone' } // full user info
+            ]
+        })
+        .populate('customerId', 'fullName email phone') // who submitted the request
+        .populate('requestedRoomId', 'roomNumber type price')
+        .populate('approvedBy', 'fullName email role');
 
-    res.json(requests);
+    // Flatten each request to include booking room and user
+    const transformed = requests.map(req => {
+        const obj = req.toObject();
+
+        // Extract room and user from nested bookingId
+        obj.room = obj.bookingId?.roomId || null;
+        obj.user = obj.bookingId?.customerId || null;
+
+        return obj;
+    });
+
+    res.json(transformed);
 });
+
 
 // @desc    Admin phê duyệt yêu cầu thay đổi booking
 // @route   PUT /bookings/bookingChangeRequests/:id/approve
