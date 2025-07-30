@@ -3,6 +3,9 @@ import asyncHandler from '../utils/errorHandler.js';
 import Customer from '../models/Customer.js';
 import Employee from '../models/Employee.js';
 import { jwtSecret } from '../config/jwt.js';
+
+
+
 const protect = asyncHandler(async (req, res, next) => {
     let token;
 
@@ -42,7 +45,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
     if (!token) {
         res.status(401);
-        throw new Error('Không có token');
+        throw new Error('Không có AccessToken');
     }
 });
 

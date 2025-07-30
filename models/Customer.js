@@ -7,6 +7,7 @@ const customerSchema = new mongoose.Schema({
   phone: { type: String, required: true }, // Phone không cần unique
   address: { type: String },
   password: { type: String, required: true },
+  refreshToken: { type: String }, // bổ sung thêm refreshToken
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
