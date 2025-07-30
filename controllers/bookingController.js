@@ -23,15 +23,13 @@ const checkRoomAvailability = async (roomId, checkInDate, checkOutDate, currentB
 };
 
 //Lấy tất cả các booking
-
 export const getBookings = asyncHandler(async (req, res) => {
     let query = Booking.find();
 
-    // Cus chỉ có thể xem các booking của chính họ
+    // Customer only sees their own bookings
     if (req.user.role === 'Customer') {
         query = query.where('customerId').equals(req.user._id);
     } else {
-        // Manager/Admin có thể lọc theo customerId hoặc roomId
         if (req.query.customerId) {
             query = query.where('customerId').equals(req.query.customerId);
         }
@@ -41,13 +39,25 @@ export const getBookings = asyncHandler(async (req, res) => {
     }
 
     const features = new APIFeatures(query, req.query)
-        .filter() // Xử lý checkInDate, checkOutDate, paymentStatus
+        .filter()
         .sort()
         .paginate();
 
-    const bookings = await features.query.populate('customerId', 'fullName email phone').populate('roomId', 'roomNumber type price');
-    res.json(bookings);
+    const bookings = await features.query
+        .populate('customerId', 'fullName email phone')
+        .populate('roomId'); // populate full room
+
+    // Add room property and optionally remove roomId
+    const transformedBookings = bookings.map(b => {
+        const obj = b.toObject();
+        obj.room = obj.roomId;
+        delete obj.roomId;
+        return obj;
+    });
+
+    res.json(transformedBookings);
 });
+
 
 // Thêm booking mới
 
