@@ -97,7 +97,11 @@ const createDefaultUsers = async () => {
 };
 
 
-const PORT = process.env.PORT || 8988;
+const PORT = process.env.PORT || 3000;
+// ✅ this makes the app accessible outside the container
+app.listen(PORT, '0.0.0.0', async () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
 connectDB().then(() => {
     app.listen(PORT, async () => {
