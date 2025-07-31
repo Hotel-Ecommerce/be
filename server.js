@@ -51,6 +51,11 @@ app.use('/rooms', roomRoutes);
 app.use('/bookings', bookingRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/statistics', statisticRoutes);
+
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'Server is healthy' });
+});
+
 app.use(errorHandler);
 
 
