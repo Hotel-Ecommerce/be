@@ -19,8 +19,6 @@ const __dirname = dirname(__filename);
 
 dotenv.config(); // Tải biến môi trường
 
-
-
 const app = express();
 
 // Middleware
@@ -96,13 +94,11 @@ const createDefaultUsers = async () => {
     }
 };
 
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, '0.0.0.0', async () => {
     console.log(`Server running on port ${PORT}`);
 });
-
 
 connectDB().then(() => {
     app.listen(PORT, async () => {
