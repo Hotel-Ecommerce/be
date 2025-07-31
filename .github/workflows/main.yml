@@ -1,0 +1,30 @@
+name: Deploy to Linux Server
+
+on:
+  push:
+    tags:
+      - 'deploy-*'
+
+jobs:
+  deploy:
+    name: SSH Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Connect and Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/projects/vb2/be
+            git fetch --all
+            git checkout master
+            git pull
+            git status
+            cd ..
+            docker compose up -d --build
