@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema({
   checkOutDate: { type: Date, required: true },
   totalPrice: { type: Number, required: true },
   status: { type: String, default: 'Confirmed', enum: ['Confirmed', 'Cancelled'] }, // Trạng thái đặt phòng
-  paymentStatus: { type: String, default: 'Unpaid', enum: ['Unpaid', 'Paid', 'Cancelled'] }, // Trạng thái thanh toán
+  paymentStatus: { type: String, default: 'Unpaid', enum: ['Unpaid', 'Paid', 'Cancelled', 'Refund Pending'] }, // Trạng thái thanh toán
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
