@@ -620,7 +620,7 @@ export const disapproveBookingChangeRequest = asyncHandler(async (req, res) => {
     const { reason } = req.body; // Lý do từ chối
 
     // Chỉ Admin mới có quyền từ chối
-    if (req.user.role !== 'Admin') {
+    if (req.user.role !== 'Admin' && req.user.role !== 'Manager') {
         res.status(403);
         throw new Error('Bạn không có quyền từ chối yêu cầu thay đổi đặt phòng.');
     }
