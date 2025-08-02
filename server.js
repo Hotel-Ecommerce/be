@@ -29,7 +29,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(cookieParser()); // Sử dụng cookie-parser middleware
+app.use(cookieParser()); // Sử dụng cookie-parser middleware. cho phép ứng dụng truy cập và phân tích cú pháp cookie được gửi từ client thông qua req.cookies
 
 // Phục vụ các file tĩnh (hình ảnh đã upload)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -54,7 +54,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'Server is healthy' });
 });
 
-app.use(errorHandler);
+app.use(errorHandler); // xử lý error chung bằng middleware
 
 
 // tạo user mặc định khi khởi chạy server

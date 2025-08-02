@@ -15,9 +15,9 @@ const generateRefreshToken = (id, role) => {
 // Hàm gửi Refresh Token vào cookie máy client
 const sendRefreshToken = (res, token) => {
     res.cookie('refreshToken', token, {
-        httpOnly: true, // Chỉ có thể truy cập qua HTTP(S) request, không qua JavaScript phía client
+        httpOnly: true, // Chỉ có thể truy cập qua HTTP(S) request, không qua JavaScript phía client. Đây là một biện pháp bảo mật quan trọng. Nó ngăn JavaScript phía client đọc hoặc sửa đổi cookie này, giúp chống lại các cuộc tấn công Cross-Site Scripting (XSS).
         secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong production
-        sameSite: 'strict', // Ngăn chặn tấn công CSRF (Cross-Site Request Forgery)
+        sameSite: 'strict', // Ngăn chặn tấn công CSRF (Cross-Site Request Forgery) Bảo vệ chống lại tấn công Cross-Site Request Forgery (CSRF) bằng cách đảm bảo cookie chỉ được gửi trong các yêu cầu bắt nguồn từ cùng một trang web.
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 ngày
     });
 };
@@ -181,7 +181,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 
     try {
-        const decoded = jwt.verify(refreshTokenFromCookie, jwtRefreshSecret);
+        const decoded = jwt.verify(refreshTokenFromCookie, jwtRefreshSecret); // thực hiện giải mã với refreshSecret
 
         let user;
         if (decoded.role === 'Customer') {

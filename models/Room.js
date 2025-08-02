@@ -4,7 +4,7 @@ const roomSchema = new mongoose.Schema({
   type: { type: String, required: true, enum: ['Standard', 'Deluxe', 'Suite'] },
   price: { type: Number, required: true },
   description: { type: String },
-  images: [{ type: String }], // Mảng các URL hình ảnh
+  images: [{ type: String }], // Mảng các hình ảnh
   capacity: { type: Number, required: true }, // Sức chứa của phòng
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
